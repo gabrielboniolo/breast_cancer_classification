@@ -11,7 +11,7 @@ def load_classifier():
 
     if not classifier_path.exists() or not scaler_path.exists():
         raise FileNotFoundError("Classifier files '.pkl' were not found.")
-    
+
     with open(classifier_path, "rb") as f:
         classifier = pickle.load(f)
 

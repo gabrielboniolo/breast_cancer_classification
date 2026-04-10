@@ -1,18 +1,27 @@
 import uvicorn
 from fastapi import FastAPI
 
-from routers import init_routers
+from utils import load_classifier
 from database import Base, engine
+from routers import init_routers
 
 app = FastAPI()
 
-Base.metadata.create_all(bind=engine)
+try:
+    load_classifier()
+except FileNotFoundError as e:
+    print(e)
+    classifier_path = None
+    scaler_path = None
+    columns_path = None
 
-init_routers(app)
+Base.metadata.create_all(bind=engine)
 
 @app.get("/", include_in_schema=False)
 async def root():
     return {"message": "Sucess, the API is working"}
+
+init_routers(app)
 
 if __name__ == "__main__":
     uvicorn.run(
