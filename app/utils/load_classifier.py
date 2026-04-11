@@ -1,7 +1,7 @@
 import pickle
 from pathlib import Path
 
-ML_DIR = Path("../ml")
+ML_DIR = Path("../../ml")
 
 def load_classifier():
     
