@@ -1,13 +1,13 @@
 import pickle
 from pathlib import Path
 
-ML_DIR = Path("../../ml")
+ML_DIR = Path("ml")
 
 def load_classifier():
     
-    classifier_path = ML_DIR / "classifier.pkl"
+    classifier_path = ML_DIR / "melhor_modelo.pkl"
     scaler_path = ML_DIR / "scaler.pkl"
-    columns_path = ML_DIR / "columns.pkl"
+    columns_path = ML_DIR / "colunas.pkl"
 
     if not classifier_path.exists() or not scaler_path.exists():
         raise FileNotFoundError("Classifier files '.pkl' were not found.")

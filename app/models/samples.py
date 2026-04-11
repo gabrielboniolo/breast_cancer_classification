@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Integer, Float
 from database import Base
 
-class SampleResults(Base):
+class Samples(Base):
 
-    __tablename__= "sample_results"
+    __tablename__= "samples"
 
     id = Column(Integer, primary_key=True, index=True)
     radius = Column(Float)

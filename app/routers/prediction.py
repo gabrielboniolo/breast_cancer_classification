@@ -3,8 +3,9 @@ from fastapi import APIRouter, HTTPException
 
 from database import SessionLocal
 from schemas.sample import Sample
-from app.utils import load_classifier
-from app.models.sample import SampleResults
+from utils.load_classifier import load_classifier
+from models.samples import Samples
+from models.predictions import Predictions
 
 prediction_router = APIRouter()
 
@@ -15,8 +16,8 @@ except FileNotFoundError as e:
     classifier, scaler, columns = None, None, None
 
 
-@prediction_router.post("/sample", tags=["Prediction"])
-async def prediction(sample: Sample):
+@prediction_router.post("/prediction", tags=["Prediction"])
+async def create_prediction(sample: Sample):
     
     if classifier is None or scaler is None:
         raise HTTPException(
@@ -38,40 +39,32 @@ async def prediction(sample: Sample):
     confiability = float(probabilities[int(prediction)])
 
     with SessionLocal() as db:
-        record = SampleResults(
+        new_sample = Samples(
+            radius = sample.radius,
+            texture = sample.texture,
+            perimeter = sample.perimeter,
+            area = sample.area,
+            smoothness = sample.smoothness,
+            compactness = sample.compactness,
+            concavity = sample.concavity,
+            concave_points = sample.concave_points,
+            symmetry = sample.symmetry,
+            fractal_dimension = sample.fractal_dimension
+        )
+
+        new_prediction = Predictions(
             result=text_result,
             confiability=confiability
         )
 
-    db.add(record)
-    db.commit()
+        db.add(new_sample)
+        db.add(new_prediction)
+        db.commit()
 
     return {
         "result": text_result,
-        "confiability": round(confiability * 100, 2),  # Em porcentagem
+        "confiability": round(confiability * 100, 2),
         "probability_malignant": round(float(probabilities[0]) * 100, 2),
         "probability_benign": round(float(probabilities[1]) * 100, 2),
-        "alert": text_result == "Malignant"   # Booleano para o frontend destacar
+        "alert": text_result == "Malignant"
     }
-
-# @prediction_router.post("/sample", tags=["Prediction"])
-# async def prediction(sample: Sample):
-#     new_sample = SampleResults(
-#         radius = sample.radius,
-#         texture = sample.texture,
-#         perimeter = sample.perimeter,
-#         area = sample.area,
-#         smoothness = sample.smoothness,
-#         compactness = sample.compactness,
-#         concavity = sample.concavity,
-#         concave_points = sample.concave_points,
-#         symmetry = sample.symmetry,
-#         fractal_dimension = sample.fractal_dimension
-#     )
-
-#     with SessionLocal() as db:
-#         db.add(new_sample)
-#         db.commit()
-#         db.refresh(new_sample)
-
-#     return new_sample
