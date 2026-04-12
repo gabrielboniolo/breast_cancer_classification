@@ -15,10 +15,8 @@ except FileNotFoundError as e:
     print(e)
     classifier, scaler, columns = None, None, None
 
-
 @prediction_router.post("/prediction", tags=["Prediction"])
 async def create_prediction(sample: Sample):
-    
     if classifier is None or scaler is None:
         raise HTTPException(
             status_code=503,
