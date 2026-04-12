@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BreastCare AI — Diagnostic Tool</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Inter:wght@300;400;500;600&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="#">
+
+        <!-- Medical cross — thin stroked rectangles -->
+        <rect x="16" y="5"  width="8" height="22" rx="2.5" stroke="#005354" stroke-width="1.7" fill="none"/>
+        <rect x="5"  y="16" width="22" height="8"  rx="2.5" stroke="#005354" stroke-width="1.7" fill="none"/>
+
+        <!-- Gear — bottom-right, filled in muted teal, overlaps corner -->
+        <g transform="translate(22.5,22.5)">
+          <!-- teeth as small rounded rects -->
+          <rect x="2.8" y="-1.5" width="2.4" height="1.8" rx="0.5" fill="#91D2D2"/>
+          <rect x="2.8" y="9.7"  width="2.4" height="1.8" rx="0.5" fill="#91D2D2"/>
+          <rect x="-1.5" y="2.8" width="1.8" height="2.4" rx="0.5" fill="#91D2D2"/>
+          <rect x="9.7"  y="2.8" width="1.8" height="2.4" rx="0.5" fill="#91D2D2"/>
+          <rect x="0.2"  y="0.2" width="2"   height="2"   rx="0.5" fill="#91D2D2" transform="rotate(45 1.2 1.2)"/>
+          <rect x="6"    y="6"   width="2"   height="2"   rx="0.5" fill="#91D2D2" transform="rotate(45 7 7)"/>
+          <rect x="5.8"  y="0.2" width="2"   height="2"   rx="0.5" fill="#91D2D2" transform="rotate(-45 6.8 1.2)"/>
+          <rect x="0.2"  y="5.8" width="2"   height="2"   rx="0.5" fill="#91D2D2" transform="rotate(-45 1.2 6.8)"/>
+          <!-- gear disc -->
+          <circle cx="4" cy="4" r="3.6" fill="#ADEEEF"/>
+          <!-- inner hole -->
+          <circle cx="4" cy="4" r="1.6" fill="#f4fafa"/>
+        </g>
+      </svg>
+
+      <span class="brand-wordmark">
+        <span class="wm-breast">Breast</span><span class="wm-care">Care</span><span class="wm-ai"> AI</span>
+      </span>
+    </a>
+
+    <span class="header-badge">Diagnostic Tool &middot; v1.0</span>
+  </div>
+</header>
+
+<main class="main-wrapper">
+  <div class="row g-4">
+
+    <!-- Left: Form -->
+    <div class="col-lg-7">
+      <div class="mb-3">
+        <p class="section-label">Input Parameters</p>
+        <h1 class="section-title">Cytology Analysis Form</h1>
+        <p class="section-desc">
+          Enter the fine needle aspirate (FNA) measurements from the digitized image.
+          All values correspond to mean features of the cell nuclei present in the sample.
+        </p>
+      </div>
+
+      <div class="card-panel">
+        <form id="predictionForm" novalidate>
+
+          <p class="field-group-title">Morphometric &mdash; Size &amp; Shape</p>
+          <div class="row g-3 mb-4">
+            <div class="col-sm-6">
+              <label class="form-label" for="radius">Mean Radius</label>
+              <p class="field-hint">Mean of distances from center to perimeter points</p>
+              <input class="form-control" type="number" step="any" id="radius" value="14.12" required/>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="perimeter">Mean Perimeter</label>
+              <p class="field-hint">Mean size of the core tumor boundary</p>
+              <input class="form-control" type="number" step="any" id="perimeter" value="91.97" required/>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="area">Mean Area</label>
+              <p class="field-hint">Mean area of the tumor cross-section</p>
+              <input class="form-control" type="number" step="any" id="area" value="654.8" required/>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="texture">Mean Texture</label>
+              <p class="field-hint">Standard deviation of gray-scale values</p>
+              <input class="form-control" type="number" step="any" id="texture" value="19.29" required/>
+            </div>
+          </div>
+
+          <p class="field-group-title">Morphometric &mdash; Contour &amp; Regularity</p>
+          <div class="row g-3 mb-4">
+            <div class="col-sm-6">
+              <label class="form-label" for="smoothness">Smoothness</label>
+              <p class="field-hint">Local variation in radius lengths</p>
+              <input class="form-control" type="number" step="any" id="smoothness" value="0.096" required/>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="compactness">Compactness</label>
+              <p class="field-hint">Perimeter&sup2; / area &minus; 1.0</p>
+              <input class="form-control" type="number" step="any" id="compactness" value="0.104" required/>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="concavity">Concavity</label>
+              <p class="field-hint">Severity of concave portions of the contour</p>
+              <input class="form-control" type="number" step="any" id="concavity" value="0.088" required/>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="concave_points">Concave Points</label>
+              <p class="field-hint">Number of concave portions of the contour</p>
+              <input class="form-control" type="number" step="any" id="concave_points" value="0.048" required/>
+            </div>
+          </div>
+
+          <p class="field-group-title">Morphometric &mdash; Structural Geometry</p>
+          <div class="row g-3 mb-4">
+            <div class="col-sm-6">
+              <label class="form-label" for="symmetry">Symmetry</label>
+              <p class="field-hint">Symmetry coefficient of the nuclear shape</p>
+              <input class="form-control" type="number" step="any" id="symmetry" value="0.181" required/>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="fractal_dimension">Fractal Dimension</label>
+              <p class="field-hint">Coastline approximation &minus; 1 (boundary complexity)</p>
+              <input class="form-control" type="number" step="any" id="fractal_dimension" value="0.062" required/>
+            </div>
+          </div>
+
+          <div class="d-flex gap-2 align-items-center flex-wrap">
+            <button class="btn-analyze" type="submit" id="submitBtn">Run Classification</button>
+            <button type="button" class="btn btn-link text-secondary" style="font-size:0.78rem;" id="resetBtn">Reset to defaults</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+    <!-- Right: Result -->
+    <div class="col-lg-5">
+      <div class="mb-3">
+        <p class="section-label">Classification Output</p>
+        <h2 class="section-title" style="font-size:1.4rem;">Analysis Report</h2>
+        <p class="section-desc">
+          Results are generated by a trained ML classifier (Wisconsin Diagnostic Dataset).
+          This tool is intended for research and educational purposes only.
+        </p>
+      </div>
+
+      <div id="idle-state" class="card-panel text-center py-5"
+           style="border-style:dashed;border-color:var(--muted);background:transparent;box-shadow:none;">
+        <div style="margin-bottom:1rem;">
+          <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#91D2D2" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20h9"/>
+            <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/>
+          </svg>
+        </div>
+        <p style="font-size:0.82rem;color:#8aacac;margin:0;">
+          Complete the form and run the classification<br/>to display the diagnostic output here.
+        </p>
+      </div>
+
+      <div class="error-panel" id="errorPanel">
+        <strong>Request failed.</strong>
+        <p class="mb-0 mt-1" id="errorMsg" style="font-family:'DM Mono',monospace;font-size:0.75rem;"></p>
+      </div>
+
+      <div id="result-panel">
+        <div class="result-header">
+          <div class="result-header-left">
+            <div class="result-header-icon">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#BBFDFD" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </div>
+            <span class="result-title">Classification Complete</span>
+          </div>
+          <span class="result-ts" id="resultTimestamp"></span>
+        </div>
+
+        <div class="result-body">
+          <div class="classification-row">
+            <div>
+              <div class="classification-label">Diagnosis</div>
+              <div class="classification-value" id="resultLabel">—</div>
+            </div>
+            <div class="confidence-pill" id="confidencePill">—</div>
+          </div>
+
+          <div class="mb-1">
+            <div class="prob-label"><span>Malignant</span><span id="pctMalignant">—</span></div>
+            <div class="prob-bar-track"><div class="prob-bar-fill" id="barMalignant"></div></div>
+            <div class="prob-label"><span>Benign</span><span id="pctBenign">—</span></div>
+            <div class="prob-bar-track"><div class="prob-bar-fill" id="barBenign"></div></div>
+          </div>
+
+          <div class="clinical-note mt-3">
+            <strong>Notice:</strong> This automated classification is based on morphometric features extracted
+            from FNA cytology and is provided as a <strong>decision-support tool only</strong>. It must not
+            substitute clinical judgment, histopathological examination, or specialist evaluation. Results should
+            be interpreted in conjunction with the patient's full clinical presentation.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  BreastCare AI &nbsp;&middot;&nbsp; Classification System &nbsp;&middot;&nbsp;
+  Wisconsin Diagnostic Dataset (WDBC) &nbsp;&middot;&nbsp; For research &amp; educational purposes only
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
